@@ -3,19 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <title>讀取 API 資料</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    input {
+      padding: 8px;
+      font-size: 16px;
+      width: 300px;
+    }
+    ul {
+      margin-top: 20px;
+      padding-left: 0;
+      list-style: none;
+    }
+    li {
+      padding: 5px 0;
+      border-bottom: 1px solid #ddd;
+    }
+  </style>
 </head>
 <body>
   <h1>全職同工搜尋頁</h1>
+  <input type="text" id="searchBox" placeholder="輸入姓名關鍵字">
   <ul id="centerList"></ul>
 
   <script>
+    let nameList = [];
     fetch("https://hr.crm-shekinahch.org/api/v1/Center/GetCurrentlyEmployedCenterIds")
       .then(response => response.json())
       .then(data => {
         const nameList = data.map(item => item.name);
-        console.log(names);
+        console.log(nameList);
       })
       .catch(error => console.error("讀取失敗:", error));
+
+    // 渲染清單
+    function renderList(list) {
+      const ul = document.getElementById("centerList");
+      ul.innerHTML = "";
+      list.forEach(name => {
+        const li = document.createElement("li");
+        li.textContent = name;
+        ul.appendChild(li);
+      });
+    }
+
+    // 搜尋功能
+    document.getElementById("searchBox").addEventListener("input", function() {
+      const keyword = this.value.trim();
+      const filtered = nameList.filter(name => name.includes(keyword));
+      renderList(filtered);
+    });
   </script>
 </body>
 </html>
