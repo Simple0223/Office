@@ -31,11 +31,13 @@
 
   <script>
     let nameList = [];
+
+    // 抓 API 資料
     fetch("https://hr.crm-shekinahch.org/api/v1/Center/GetCurrentlyEmployedCenterIds")
       .then(response => response.json())
       .then(data => {
-        const nameList = data.map(item => item.name);
-        console.log(nameList);
+        nameList = data.map(item => item.name);
+        renderList(nameList); // 預設顯示所有
       })
       .catch(error => console.error("讀取失敗:", error));
 
