@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>讀取 API 資料</title>
+</head>
+<body>
+  <h1>全職同工搜尋頁</h1>
+  <ul id="centerList"></ul>
+
+  <script>
+    fetch("https://hr.crm-shekinahch.org/api/v1/Center/GetCurrentlyEmployedCenterIds")
+      .then(response => response.json())
+      .then(data => {
+        const nameList = data.map(item => item.name);
+        console.log(names);
+      })
+      .catch(error => console.error("讀取失敗:", error));
+  </script>
+</body>
+</html>
