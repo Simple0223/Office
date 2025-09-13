@@ -1,63 +1,90 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <title>讀取 API 資料</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    input {
-      padding: 8px;
-      font-size: 16px;
-      width: 300px;
-    }
-    ul {
-      margin-top: 20px;
-      padding-left: 0;
-      list-style: none;
-    }
-    li {
-      padding: 5px 0;
-      border-bottom: 1px solid #ddd;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>姓名搜尋工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        input {
+            padding: 8px;
+            width: 300px;
+            margin-bottom: 15px;
+        }
+
+        .name-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        button {
+            padding: 4px 10px;
+            cursor: pointer;
+            border: none;
+            background: #4CAF50;
+            color: white;
+            border-radius: 5px;
+        }
+
+            button:hover {
+                background: #45a049;
+            }
+    </style>
 </head>
 <body>
-  <h1>全職同工搜尋頁</h1>
-  <input type="text" id="searchBox" placeholder="輸入姓名關鍵字">
-  <ul id="centerList"></ul>
+    <h2>姓名搜尋工具</h2>
+    <input type="text" id="search" placeholder="輸入名字搜尋...">
+    <div id="list"></div>
 
-  <script>
-    let nameList = [];
+    <script>
+        const names = [
+            "姚源振", "朱宜溱", "徐翠霞", "張安婷", "劉承明", "陳俞君", "曾蕙純", "江正宇", "鄭婉儀",
+            "吳巧婷", "袁征宇", "周嬥臻", "徐東立", "楊行仁", "余宗彥", "邱瑞分", "丁志中", "劉惠君",
+            "陳瓊芳", "張碩中", "鄭慧瑩", "林致恆", "林亞倫", "章曉雲", "謝明祥", "盧思妘", "邵永儀",
+            "馬安妮", "楊明達", "郭鳴琴", "楊千里", "阮俐屏", "韋艾馨", "李西瑩", "張琪英", "鄭景云",
+            "李明星", "林金涼", "李永恩", "李林翰", "林思吟", "林紫盈", "張舒畬", "郭奕君", "葉能",
+            "蔡加榮", "蕭伊吟", "陳柏勳", "鍾品凡", "林政崴", "王瀚陞", "張耀中", "劉櫂維", "林軒丞",
+            "王英如", "高語箴", "彭文正", "黃佳婕", "黃麗恩", "葉謝秀琴", "廖思吟", "蔡以樂", "談敬雅",
+            "藍芳怡", "羅永嫺", "張茜茜", "陳慧君", "焦恩禮", "邱梓恩", "李宗哲", "陳彥儒", "葉瑞忠",
+            "劉竹茂", "顏新昌", "方士珉", "王信博", "許百琮", "鄭捷予", "陳峻暐", "杜文月", "劉偉仁",
+            "蔡秋慧", "吳丞治", "李永諾", "張桓瑞", "陳俞菁", "蕭舒妮", "王芳郁", "郭明勳", "楊又璇",
+            "林湘怡", "陳若榛", "程蘭淇", "李美馨", "莊美麟", "陳百惠", "周靜紫", "劉欣玟", "洪淑芳",
+            "鄭宇倢", "侯美英", "蔡幸怡", "吳郁親", "林明隆", "林韋伶", "張安慈", "黃韻潔", "賓錦揚",
+            "鄭郁潔", "簡月貞", "丁家蘊", "劉群茂", "蘇慎貞"
+        ];
 
-    // 抓 API 資料
-    fetch("https://hr.crm-shekinahch.org/api/v1/Center/GetCurrentlyEmployedCenterIds")
-      .then(response => response.json())
-      .then(data => {
-        nameList = data.map(item => item.name);
-        renderList(nameList); // 預設顯示所有
-      })
-      .catch(error => console.error("讀取失敗:", error));
+        const listDiv = document.getElementById("list");
+        const searchInput = document.getElementById("search");
 
-    // 渲染清單
-    function renderList(list) {
-      const ul = document.getElementById("centerList");
-      ul.innerHTML = "";
-      list.forEach(name => {
-        const li = document.createElement("li");
-        li.textContent = name;
-        ul.appendChild(li);
-      });
-    }
+        function renderList(filter = "") {
+            listDiv.innerHTML = "";
+            names
+                .filter(n => n.includes(filter))
+                .forEach(name => {
+                    const div = document.createElement("div");
+                    div.className = "name-item";
+                    div.innerHTML = `
+                <span>${name}</span>
+                <button onclick="copyName('${name}')">複製</button>
+              `;
+                    listDiv.appendChild(div);
+                });
+        }
 
-    // 搜尋功能
-    document.getElementById("searchBox").addEventListener("input", function() {
-      const keyword = this.value.trim();
-      const filtered = nameList.filter(name => name.includes(keyword));
-      renderList(filtered);
-    });
-  </script>
+        function copyName(name) {
+            navigator.clipboard.writeText(name).then(() => {
+                alert(`已複製：${name}`);
+            });
+        }
+
+        searchInput.addEventListener("input", (e) => renderList(e.target.value));
+        renderList();
+    </script>
 </body>
 </html>
