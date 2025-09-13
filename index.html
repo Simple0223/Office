@@ -1,90 +1,132 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>姓名搜尋工具</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>姓名搜尋</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
         }
 
-        input {
-            padding: 8px;
-            width: 300px;
+        h2 {
+            color: #785AA5;
+            text-align: center;
             margin-bottom: 15px;
         }
 
-        .name-item {
+        .search-box {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            background: white;
+            margin: 5px 0;
+            padding: 12px;
+            border-radius: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 6px 10px;
-            border-bottom: 1px solid #ddd;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
         }
 
         button {
-            padding: 4px 10px;
-            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 14px;
+            background-color: #785AA5;
             border: none;
-            background: #4CAF50;
+            border-radius: 6px;
             color: white;
-            border-radius: 5px;
+            cursor: pointer;
         }
 
-            button:hover {
-                background: #45a049;
+            button:active {
+                background-color: #E85F6E;
             }
+
+        .message {
+            text-align: center;
+            margin-top: 10px;
+            color: #E85F6E;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
-    <h2>姓名搜尋工具</h2>
-    <input type="text" id="search" placeholder="輸入名字搜尋...">
-    <div id="list"></div>
+    <h2>姓名搜尋</h2>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="輸入姓名...">
+    </div>
+    <ul id="resultList"></ul>
+    <div class="message" id="message"></div>
 
     <script>
         const names = [
-            "姚源振", "朱宜溱", "徐翠霞", "張安婷", "劉承明", "陳俞君", "曾蕙純", "江正宇", "鄭婉儀",
-            "吳巧婷", "袁征宇", "周嬥臻", "徐東立", "楊行仁", "余宗彥", "邱瑞分", "丁志中", "劉惠君",
-            "陳瓊芳", "張碩中", "鄭慧瑩", "林致恆", "林亞倫", "章曉雲", "謝明祥", "盧思妘", "邵永儀",
-            "馬安妮", "楊明達", "郭鳴琴", "楊千里", "阮俐屏", "韋艾馨", "李西瑩", "張琪英", "鄭景云",
-            "李明星", "林金涼", "李永恩", "李林翰", "林思吟", "林紫盈", "張舒畬", "郭奕君", "葉能",
-            "蔡加榮", "蕭伊吟", "陳柏勳", "鍾品凡", "林政崴", "王瀚陞", "張耀中", "劉櫂維", "林軒丞",
-            "王英如", "高語箴", "彭文正", "黃佳婕", "黃麗恩", "葉謝秀琴", "廖思吟", "蔡以樂", "談敬雅",
-            "藍芳怡", "羅永嫺", "張茜茜", "陳慧君", "焦恩禮", "邱梓恩", "李宗哲", "陳彥儒", "葉瑞忠",
-            "劉竹茂", "顏新昌", "方士珉", "王信博", "許百琮", "鄭捷予", "陳峻暐", "杜文月", "劉偉仁",
-            "蔡秋慧", "吳丞治", "李永諾", "張桓瑞", "陳俞菁", "蕭舒妮", "王芳郁", "郭明勳", "楊又璇",
-            "林湘怡", "陳若榛", "程蘭淇", "李美馨", "莊美麟", "陳百惠", "周靜紫", "劉欣玟", "洪淑芳",
-            "鄭宇倢", "侯美英", "蔡幸怡", "吳郁親", "林明隆", "林韋伶", "張安慈", "黃韻潔", "賓錦揚",
-            "鄭郁潔", "簡月貞", "丁家蘊", "劉群茂", "蘇慎貞"
+            "姚源振", "朱宜溱", "徐翠霞", "張安婷", "劉承明", "陳俞君", "曾蕙純", "江正宇", "鄭婉儀", "吳巧婷",
+            "袁征宇", "周嬥臻", "徐東立", "楊行仁", "余宗彥", "邱瑞分", "丁志中", "劉惠君", "陳瓊芳", "張碩中",
+            "鄭慧瑩", "林致恆", "林亞倫", "章曉雲", "謝明祥", "盧思妘", "邵永儀", "馬安妮", "楊明達", "郭鳴琴",
+            "楊千里", "阮俐屏", "韋艾馨", "李西瑩", "張琪英", "鄭景云", "李明星", "林金涼", "李永恩", "李林翰",
+            "林思吟", "林紫盈", "張舒畬", "郭奕君", "葉能", "蔡加榮", "蕭伊吟", "陳柏勳", "鍾品凡", "林政崴",
+            "王瀚陞", "張耀中", "劉櫂維", "林軒丞", "王英如", "高語箴", "彭文正", "黃佳婕", "黃麗恩", "葉謝秀琴",
+            "廖思吟", "蔡以樂", "談敬雅", "藍芳怡", "羅永嫺", "張茜茜", "陳慧君", "焦恩禮", "邱梓恩", "李宗哲",
+            "陳彥儒", "葉瑞忠", "劉竹茂", "顏新昌", "方士珉", "王信博", "許百琮", "鄭捷予", "陳峻暐", "杜文月",
+            "劉偉仁", "蔡秋慧", "吳丞治", "李永諾", "張桓瑞", "陳俞菁", "蕭舒妮", "王芳郁", "郭明勳", "楊又璇",
+            "林湘怡", "陳若榛", "程蘭淇", "李美馨", "莊美麟", "陳百惠", "周靜紫", "劉欣玟", "洪淑芳", "鄭宇倢",
+            "侯美英", "蔡幸怡", "吳郁親", "林明隆", "林韋伶", "張安慈", "黃韻潔", "賓錦揚", "鄭郁潔", "簡月貞",
+            "丁家蘊", "劉群茂", "蘇慎貞"
         ];
 
-        const listDiv = document.getElementById("list");
-        const searchInput = document.getElementById("search");
+        const searchInput = document.getElementById("searchInput");
+        const resultList = document.getElementById("resultList");
+        const message = document.getElementById("message");
 
-        function renderList(filter = "") {
-            listDiv.innerHTML = "";
-            names
-                .filter(n => n.includes(filter))
-                .forEach(name => {
-                    const div = document.createElement("div");
-                    div.className = "name-item";
-                    div.innerHTML = `
-                <span>${name}</span>
-                <button onclick="copyName('${name}')">複製</button>
-              `;
-                    listDiv.appendChild(div);
-                });
-        }
+        searchInput.addEventListener("input", function () {
+            const query = this.value.trim();
+            resultList.innerHTML = "";
+            message.textContent = "";
 
-        function copyName(name) {
-            navigator.clipboard.writeText(name).then(() => {
-                alert(`已複製：${name}`);
+            if (query === "") {
+                return; // 不顯示任何列表
+            }
+
+            const results = names.filter(name => name.includes(query));
+            results.forEach(name => {
+                const li = document.createElement("li");
+                li.textContent = name;
+
+                const btn = document.createElement("button");
+                btn.textContent = "複製";
+                btn.onclick = () => {
+                    navigator.clipboard.writeText(name).then(() => {
+                        message.textContent = `${name} 已複製！`;
+                        setTimeout(() => message.textContent = "", 1500);
+                    });
+                };
+
+                li.appendChild(btn);
+                resultList.appendChild(li);
             });
-        }
-
-        searchInput.addEventListener("input", (e) => renderList(e.target.value));
-        renderList();
+        });
     </script>
 </body>
 </html>
