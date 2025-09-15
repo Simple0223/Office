@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>姓名搜尋</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        h1 {
+            color: #785AA5;
+            text-align: center;
+            margin-bottom: 21px;
+        }
+
+        h2 {
+            color: #785AA5;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .search-box {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            background: white;
+            margin: 5px 0;
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+
+            li.selected {
+                background-color: #E6E0F8;
+                border: 2px solid #785AA5;
+                font-weight: bold;
+            }
+
+        .message {
+            text-align: center;
+            margin-top: 15px;
+            color: #E85F6E;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        #submitBtn {
+            display: none;
+            margin: 20px auto 0;
+            padding: 12px 24px;
+            font-size: 16px;
+            background-color: #785AA5;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            text-align: center;
+            display: block;
+        }
+
+            #submitBtn:active {
+                background-color: #E85F6E;
+            }
+    </style>
+</head>
+<body>
+    <h1>🎯 夏凱納之最 👍</h1>
+    <h2>請選擇最愛吃的同工</h2>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="輸入姓名...">
+    </div>
+    <ul id="resultList"></ul>
+    <div class="message" id="message"></div>
+    <button style="display: none;" id="submitBtn">送出</button>
+
+    <script>
+        const names = [
+            "姚源振", "朱宜溱", "徐翠霞", "張安婷", "劉承明", "陳俞君", "曾蕙純", "江正宇", "鄭婉儀", "吳巧婷",
+            "袁征宇", "周嬥臻", "徐東立", "楊行仁", "余宗彥", "邱瑞分", "丁志中", "劉惠君", "陳瓊芳", "張碩中",
+            "鄭慧瑩", "林致恆", "林亞倫", "章曉雲", "謝明祥", "盧思妘", "邵永儀", "馬安妮", "楊明達", "郭鳴琴",
+            "楊千里", "阮俐屏", "韋艾馨", "李西瑩", "張琪英", "鄭景云", "李明星", "林金涼", "李永恩", "李林翰",
+            "林思吟", "林紫盈", "張舒畬", "郭奕君", "葉能", "蔡加榮", "蕭伊吟", "陳柏勳", "鍾品凡", "林政崴",
+            "王瀚陞", "張耀中", "劉櫂維", "林軒丞", "王英如", "高語箴", "彭文正", "黃佳婕", "黃麗恩", "葉謝秀琴",
+            "廖思吟", "蔡以樂", "談敬雅", "藍芳怡", "羅永嫺", "張茜茜", "陳慧君", "焦恩禮", "邱梓恩", "李宗哲",
+            "陳彥儒", "葉瑞忠", "劉竹茂", "顏新昌", "方士珉", "王信博", "許百琮", "鄭捷予", "陳峻暐", "杜文月",
+            "劉偉仁", "蔡秋慧", "吳丞治", "李永諾", "張桓瑞", "陳俞菁", "蕭舒妮", "王芳郁", "郭明勳", "楊又璇",
+            "林湘怡", "陳若榛", "程蘭淇", "李美馨", "莊美麟", "陳百惠", "周靜紫", "劉欣玟", "洪淑芳", "鄭宇倢",
+            "侯美英", "蔡幸怡", "吳郁親", "林明隆", "林韋伶", "張安慈", "黃韻潔", "賓錦揚", "鄭郁潔", "簡月貞",
+            "丁家蘊", "劉群茂", "蘇慎貞"
+        ];
+
+        const searchInput = document.getElementById("searchInput");
+        const resultList = document.getElementById("resultList");
+        const message = document.getElementById("message");
+        const submitBtn = document.getElementById("submitBtn");
+
+        let selectedName = null;
+
+        searchInput.addEventListener("input", function () {
+            const query = this.value.trim();
+            resultList.innerHTML = "";
+            message.textContent = "";
+            submitBtn.style.display = "none"; // 清空時隱藏按鈕
+
+            if (query === "") return;
+
+            const results = names.filter(name => name.includes(query));
+            results.forEach(name => {
+                const li = document.createElement("li");
+                li.textContent = name;
+
+                li.onclick = () => {
+                    selectedName = name;
+                    [...resultList.children].forEach(item => item.classList.remove("selected"));
+                    li.classList.add("selected");
+                    message.textContent = `已選：${name}`;
+                    submitBtn.style.display = "block"; // 有選人時才出現
+                };
+
+                resultList.appendChild(li);
+            });
+        });
+
+        submitBtn.addEventListener("click", () => {
+            if (!selectedName) return;
+
+            const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSezGwXPZlcgXomaBdMotkfHVr_psGqn9_6xSj5Aysymb4s8iw/formResponse";
+            const entryId = "entry.2055049838";
+
+            fetch(formUrl, {
+                method: "POST",
+                body: new URLSearchParams({
+                    [entryId]: selectedName
+                }),
+                mode: "no-cors"
+            }).then(() => {
+                window.location.href = "10wait.html";
+            }).catch(() => {
+                alert("送出失敗，請再試一次！");
+            });
+        });
+    </script>
+</body>
+</html>

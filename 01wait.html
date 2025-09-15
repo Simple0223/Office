@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>夏凱納之最 - 活動首頁</title>
+    <title>等候投票結果</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -25,21 +25,42 @@
 
         h1 {
             font-size: 2em;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         p {
-            margin-bottom: 30px;
             font-size: 1.1em;
+            margin-bottom: 25px;
             line-height: 1.6;
+        }
+
+        /* 輪轉動畫 */
+        .loader {
+            border: 8px solid rgba(255, 255, 255, 0.3);
+            border-top: 8px solid #FFD166;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px auto;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         button {
             background-color: #FFD166;
             color: #333;
             border: none;
-            padding: 15px 30px;
-            font-size: 1.2em;
+            padding: 12px 25px;
+            font-size: 1.1em;
             border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.3s;
@@ -52,19 +73,16 @@
 </head>
 <body>
     <div class="container">
-        <h1>🎯 夏凱納之最 👍</h1>
-        <p>
-            歡迎參加我們的趣味活動！<br>
-            馬上選出你心目中的「之最」，<br>
-            投票結果將即時統計與公布。
-        </p>
-        <button onclick="startActivity()">🚀 進行活動</button>
+        <div class="loader"></div>
+        <h1>✅ 投票已送出！</h1>
+        <p>請等候投票結果出爐後，再按下「繼續進行」</p>
+        <button id="continueBtn">繼續進行</button>
     </div>
 
     <script>
-        function startActivity() {
-            window.location.href = "01work.html"; // 連到投票頁
-        }
+        document.getElementById("continueBtn").addEventListener("click", () => {
+            window.location.href = "02copy.html"; // 導向下一頁
+        });
     </script>
 </body>
 </html>
