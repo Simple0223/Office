@@ -123,6 +123,24 @@
 
         let selectedName = null;
 
+        function renderList(list) {
+            resultList.innerHTML = "";
+            list.forEach(name => {
+                const li = document.createElement("li");
+                li.textContent = name;
+                li.onclick = () => {
+                    selectedName = name;
+                    [...resultList.children].forEach(item => item.classList.remove("selected"));
+                    li.classList.add("selected");
+                    message.textContent = `已選：${name}`;
+                    submitBtn.style.display = "block";
+                };
+                resultList.appendChild(li);
+            });
+        }
+
+        renderList(names);
+
         searchInput.addEventListener("input", function () {
             const query = this.value.trim();
             resultList.innerHTML = "";
