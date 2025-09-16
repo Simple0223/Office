@@ -1,94 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+    <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>姓名搜尋</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-
-        h1 {
-            color: #785AA5;
-            text-align: center;
-            margin-bottom: 21px;
-        }
-
-        h2 {
-            color: #785AA5;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .search-box {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-
-        input {
-            width: 100%;
-            max-width: 400px;
-            padding: 12px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        li {
-            background: white;
-            margin: 5px 0;
-            padding: 12px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-            cursor: pointer;
-        }
-
-            li.selected {
-                background-color: #E6E0F8;
-                border: 2px solid #785AA5;
-                font-weight: bold;
-            }
-
-        .message {
-            text-align: center;
-            margin-top: 15px;
-            color: #E85F6E;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        #submitBtn {
-            display: none;
-            margin: 20px auto 0;
-            padding: 12px 24px;
-            font-size: 16px;
-            background-color: #785AA5;
-            border: none;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-            text-align: center;
-            display: block;
-        }
-
-            #submitBtn:active {
-                background-color: #E85F6E;
-            }
-    </style>
 </head>
 <body>
     <h1>🎯 夏凱納之最 👍</h1>
@@ -97,8 +13,10 @@
         <input type="text" id="searchInput" placeholder="輸入姓名...">
     </div>
     <ul id="resultList"></ul>
-    <div class="message" id="message"></div>
-    <button style="display: none;" id="submitBtn">送出</button>
+    <div id="bottomBar">
+        <div class="message" id="message">請點選同工姓名</div>
+        <button style="display: none;" id="submitBtn">送出</button>
+    </div>
 
     <script>
         const names = [
@@ -168,7 +86,7 @@
 
         submitBtn.addEventListener("click", () => {
             if (!selectedName) return;
-            
+
             const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSezim7xJaItRXqVDRf9XvT16V6tdMEqXDcnpKtRdmleEKcLfg/formResponse";
             const entryId = "entry.819679415";
 
